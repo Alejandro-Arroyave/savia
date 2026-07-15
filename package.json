@@ -1,0 +1,20 @@
+{
+  "name": "savia",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Savia — app de cuidado de plantas (riego y abono con notificaciones push)",
+  "packageManager": "pnpm@9.12.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev:api": "pnpm --filter @savia/api dev",
+    "dev:worker": "pnpm --filter @savia/api worker",
+    "dev:mobile": "pnpm --filter @savia/mobile start",
+    "prisma:generate": "pnpm --filter @savia/api prisma:generate",
+    "prisma:migrate": "pnpm --filter @savia/api prisma:migrate",
+    "prisma:studio": "pnpm --filter @savia/api prisma:studio",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck"
+  }
+}

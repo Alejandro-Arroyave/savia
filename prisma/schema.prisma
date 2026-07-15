@@ -1,0 +1,139 @@
+// Savia — modelo de datos (propuesta, 2026-07-14)
+// Ver docs/04-data-model.md para la explicación de cada decisión.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Tipos para Pothos (schema GraphQL code-first). Ver apps/api/src/builder.ts
+generator pothos {
+  provider = "prisma-pothos-types"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum CareType {
+  WATERING
+  FERTILIZING
+}
+
+enum NotificationKind {
+  DAY_BEFORE
+  DAY_OF
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+  CANCELLED
+}
+
+model User {
+  id              String   @id @default(cuid())
+  auth0Id         String   @unique // 'sub' de Auth0
+  email           String   @unique
+  name            String?
+  locale          String   @default("es") // i18n
+  timezone        String   @default("America/Bogota") // IANA
+
+  // Preferencias de notificación
+  notifyHour      Int      @default(9) // 0-23, hora local
+  notifyDayBefore Boolean  @default(true)
+  notifyDayOf     Boolean  @default(true)
+
+  plants          Plant[]
+  pushTokens      PushToken[]
+  notifications   Notification[]
+
+  createdAt       DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime @updatedAt      @db.Timestamptz(6)
+}
+
+model Plant {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name      String
+  species   String?
+  photoUrl  String?
+
+  schedules CareSchedule[]
+  events    CareEvent[]
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt      @db.Timestamptz(6)
+
+  @@index([userId])
+}
+
+// Un horario por tipo de cuidado (riego / abono) por planta.
+model CareSchedule {
+  id           String    @id @default(cuid())
+  plantId      String
+  plant        Plant     @relation(fields: [plantId], references: [id], onDelete: Cascade)
+
+  type         CareType
+  intervalDays Int // "cada cuántos días"
+  lastDoneAt   DateTime? @db.Date // última aplicación
+  nextDueAt    DateTime? @db.Date // lastDoneAt + intervalDays (para consultas del worker)
+
+  createdAt    DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime  @updatedAt      @db.Timestamptz(6)
+
+  @@unique([plantId, type]) // no repetir tipo por planta
+  @@index([nextDueAt])
+}
+
+// Historial de eventos realizados → alimenta el calendario.
+model CareEvent {
+  id        String   @id @default(cuid())
+  plantId   String
+  plant     Plant    @relation(fields: [plantId], references: [id], onDelete: Cascade)
+
+  type      CareType
+  doneAt    DateTime @db.Date // día en que se hizo
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([plantId, doneAt])
+}
+
+model PushToken {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  token      String    @unique // Expo push token
+  platform   String? // "ios" | "android"
+  lastUsedAt DateTime? @db.Timestamptz(6)
+
+  createdAt  DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime  @updatedAt      @db.Timestamptz(6)
+
+  @@index([userId])
+}
+
+// Avisos programados/enviados → idempotencia y auditoría.
+model Notification {
+  id           String             @id @default(cuid())
+  userId       String
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plantId      String?
+  type         CareType
+  kind         NotificationKind
+  dueDate      DateTime           @db.Date // fecha del evento al que refiere
+  scheduledFor DateTime           @db.Timestamptz(6) // instante de envío (UTC)
+  status       NotificationStatus @default(PENDING)
+  sentAt       DateTime?          @db.Timestamptz(6)
+
+  createdAt    DateTime           @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime           @updatedAt      @db.Timestamptz(6)
+
+  @@unique([plantId, type, kind, dueDate]) // no duplicar el mismo aviso
+  @@index([status, scheduledFor])
+}

@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "Savia",
+    "slug": "savia",
+    "scheme": "savia",
+    "version": "0.0.1",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.savia.mobile"
+    },
+    "android": {
+      "package": "app.savia.mobile"
+    },
+    "plugins": ["expo-notifications"]
+  }
+}

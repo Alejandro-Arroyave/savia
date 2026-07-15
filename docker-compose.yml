@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: savia-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: savia
+      POSTGRES_PASSWORD: savia
+      POSTGRES_DB: savia
+    ports:
+      - "5432:5432"
+    volumes:
+      - savia-db-data:/var/lib/postgresql/data
+
+volumes:
+  savia-db-data:
