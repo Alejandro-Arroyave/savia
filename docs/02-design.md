@@ -53,13 +53,15 @@ y se **desbordaban** de la tarjeta. Pasar a una sola columna a ancho completo lo
 - Resumen del mes arriba (total de riegos y abonos).
 - Calendario mensual con **puntos por día**: azul = hay riego, ocre = hay abono (agregando
   todas las plantas). Hoy resaltado en verde.
-- **Agenda del día seleccionado** debajo: al tocar un día, lista qué planta y qué tarea,
-  con estado (Hecho / Hoy / Programado). Es interactivo en el mockup.
+- **Agenda continua** debajo: lista los próximos días encadenados (no un solo día), indicando
+  qué planta y qué tarea, con estado (Hecho / Hoy / Programado). Es interactivo en el mockup.
 - Decisión de diseño: los puntos son **por tipo de evento**, no por planta (más claro).
 
-## Decisiones de diseño abiertas
+## Decisiones de diseño (cerradas 2026-07-14)
 
-- Foto obligatoria / opcional / inexistente en MVP (hoy: opcional).
-- Mantener pestaña "Calendario" global además del calendario por planta (hoy: sí).
-- Puntos del calendario por tipo (actual) vs. por planta.
-- Agenda de un día (actual) vs. agenda continua de próximos días.
+Estas decisiones, antes abiertas, quedaron resueltas (ver [`../README.md`](../README.md)):
+
+- Foto de la planta: **opcional** en el MVP.
+- Se **mantiene** la pestaña "Calendario" global además del calendario por planta.
+- Puntos del calendario **por tipo de evento** (no por planta).
+- **Agenda continua** de próximos días (no agenda de un solo día).
