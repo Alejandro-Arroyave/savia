@@ -37,3 +37,6 @@ yarn-error.*
 
 # Claude Code (configuración local personal)
 .claude/settings.local.json
+
+# Graphify (grafo de conocimiento generado; regenerar con `graphify update .`)
+graphify-out/

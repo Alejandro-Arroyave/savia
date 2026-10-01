@@ -18,7 +18,7 @@ import {
 import { Screen } from "../components/Screen";
 import { AppBar } from "../components/AppBar";
 import { Card } from "../components/Card";
-import { Icon } from "../components/Icon";
+import { CareIconBadge } from "../components/CareIconBadge";
 import { Button } from "../components/Button";
 import { LoadingView, ErrorView } from "../components/StateViews";
 import type { RootStackScreenProps } from "../navigation/types";
@@ -110,9 +110,7 @@ function BigStat({ type, schedule }: { type: CareType; schedule: CareSchedule })
   return (
     <Card style={styles.bigStat}>
       <View style={styles.bigStatTop}>
-        <View style={[styles.bigStatIcon, { backgroundColor: accent.bg }]}>
-          <Icon name={type === "WATERING" ? "droplet" : "feather"} size={16} color={accent.fg} />
-        </View>
+        <CareIconBadge type={type} size={28} iconSize={16} radius={8} />
         <Text style={styles.bigStatLabel}>{careLabel(type)}</Text>
       </View>
       <Text style={[styles.bigStatValue, { color: accent.fg }]}>{status.label}</Text>
@@ -134,15 +132,12 @@ function FrequencyRow({
   schedule: CareSchedule;
   last?: boolean;
 }) {
-  const { colors } = useTheme();
+  const { radius } = useTheme();
   const styles = useThemedStyles(makeStyles);
-  const accent = careAccent(type, colors);
 
   return (
     <View style={[styles.freqRow, !last && styles.freqRowBorder]}>
-      <View style={[styles.freqIcon, { backgroundColor: accent.bg }]}>
-        <Icon name={type === "WATERING" ? "droplet" : "feather"} size={17} color={accent.fg} />
-      </View>
+      <CareIconBadge type={type} size={32} iconSize={17} radius={radius.sm} />
       <View style={styles.flex}>
         <Text style={styles.freqTitle}>{label}</Text>
         <Text style={styles.freqSub}>
@@ -166,13 +161,6 @@ const makeStyles = (t2: Theme) =>
       gap: t2.spacing.sm,
       marginBottom: t2.spacing.sm,
     },
-    bigStatIcon: {
-      width: 28,
-      height: 28,
-      borderRadius: 8,
-      alignItems: "center",
-      justifyContent: "center",
-    },
     bigStatLabel: {
       fontSize: 11,
       color: t2.colors.inkSoft,
@@ -191,13 +179,6 @@ const makeStyles = (t2: Theme) =>
       padding: 14,
     },
     freqRowBorder: { borderBottomWidth: 1, borderBottomColor: t2.colors.line },
-    freqIcon: {
-      width: 32,
-      height: 32,
-      borderRadius: t2.radius.sm,
-      alignItems: "center",
-      justifyContent: "center",
-    },
     freqTitle: { fontSize: 13.5, fontWeight: "600", color: t2.colors.ink },
     freqSub: { fontSize: 12, color: t2.colors.inkSoft },
     freqValue: {

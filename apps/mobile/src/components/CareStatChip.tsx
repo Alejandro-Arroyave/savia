@@ -3,8 +3,8 @@ import type { CareType } from "@savia/shared";
 import type { Theme } from "../theme/ThemeProvider";
 import { useTheme } from "../theme/ThemeProvider";
 import { useThemedStyles } from "../theme/useThemedStyles";
-import { careAccent, careIcon, careLabel, type CareStatusView } from "../domain/care";
-import { Icon } from "./Icon";
+import { careAccent, careLabel, type CareStatusView } from "../domain/care";
+import { CareIconBadge } from "./CareIconBadge";
 
 interface CareStatChipProps {
   type: CareType;
@@ -22,9 +22,7 @@ export function CareStatChip({ type, status }: CareStatChipProps) {
 
   return (
     <View style={[styles.row, status.tone === "overdue" && styles.overdueRow]}>
-      <View style={[styles.iconBox, { backgroundColor: accent.bg }]}>
-        <Icon name={careIcon(type)} size={14} color={accent.fg} />
-      </View>
+      <CareIconBadge type={type} size={24} iconSize={14} radius={7} />
       <Text style={styles.label}>{careLabel(type)}</Text>
       <Text style={[styles.value, { color: valueColor }]}>{status.label}</Text>
     </View>
@@ -47,13 +45,6 @@ const makeStyles = (t: Theme) =>
     overdueRow: {
       backgroundColor: t.colors.dangerBg,
       borderColor: "transparent",
-    },
-    iconBox: {
-      width: 24,
-      height: 24,
-      borderRadius: 7,
-      alignItems: "center",
-      justifyContent: "center",
     },
     label: {
       flex: 1,

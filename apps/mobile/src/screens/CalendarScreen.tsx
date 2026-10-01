@@ -6,7 +6,7 @@ import type { Theme } from "../theme/ThemeProvider";
 import { useTheme } from "../theme/ThemeProvider";
 import { useThemedStyles } from "../theme/useThemedStyles";
 import { i18n, t } from "../i18n";
-import { careAccent, careLabel, careStatusView } from "../domain/care";
+import { careLabel, careStatusView } from "../domain/care";
 import {
   buildMonthCells,
   buildUpcoming,
@@ -24,6 +24,7 @@ import { Screen } from "../components/Screen";
 import { AppBar } from "../components/AppBar";
 import { Card } from "../components/Card";
 import { Icon } from "../components/Icon";
+import { CareIconBadge } from "../components/CareIconBadge";
 import { EmptyView } from "../components/StateViews";
 
 interface AgendaSection {
@@ -139,14 +140,10 @@ export function CalendarScreen() {
 }
 
 function SummaryTile({ type, label, value }: { type: CareType; label: string; value: number }) {
-  const { colors } = useTheme();
   const styles = useThemedStyles(makeStyles);
-  const accent = careAccent(type, colors);
   return (
     <Card style={styles.tile}>
-      <View style={[styles.tileIcon, { backgroundColor: accent.bg }]}>
-        <Icon name={type === "WATERING" ? "droplet" : "feather"} size={15} color={accent.fg} />
-      </View>
+      <CareIconBadge type={type} size={26} iconSize={15} radius={7} />
       <View>
         <Text style={styles.tileValue}>{value}</Text>
         <Text style={styles.tileLabel}>{label}</Text>
@@ -156,17 +153,14 @@ function SummaryTile({ type, label, value }: { type: CareType; label: string; va
 }
 
 function AgendaRow({ task }: { task: UpcomingTask }) {
-  const { colors } = useTheme();
+  const { radius } = useTheme();
   const styles = useThemedStyles(makeStyles);
-  const accent = careAccent(task.type, colors);
   const status = careStatusView(task.date);
   const isToday = status.tone === "due";
 
   return (
     <View style={styles.agendaItem}>
-      <View style={[styles.agendaIcon, { backgroundColor: accent.bg }]}>
-        <Icon name={task.type === "WATERING" ? "droplet" : "feather"} size={16} color={accent.fg} />
-      </View>
+      <CareIconBadge type={task.type} size={32} iconSize={16} radius={radius.sm} />
       <View style={styles.flex}>
         <Text style={styles.agendaPlant} numberOfLines={1}>
           {task.plantName}
@@ -235,13 +229,6 @@ const makeStyles = (t2: Theme) =>
       flexDirection: "row",
       alignItems: "center",
       gap: t2.spacing.sm,
-    },
-    tileIcon: {
-      width: 26,
-      height: 26,
-      borderRadius: 7,
-      alignItems: "center",
-      justifyContent: "center",
     },
     tileValue: { fontSize: 16, fontWeight: "800", color: t2.colors.ink, fontVariant: ["tabular-nums"] },
     tileLabel: { fontSize: 10.5, color: t2.colors.inkSoft, textTransform: "uppercase", letterSpacing: 0.4 },
@@ -319,13 +306,6 @@ const makeStyles = (t2: Theme) =>
       paddingHorizontal: t2.spacing.md,
       paddingVertical: 10,
       marginBottom: t2.spacing.sm,
-    },
-    agendaIcon: {
-      width: 32,
-      height: 32,
-      borderRadius: t2.radius.sm,
-      alignItems: "center",
-      justifyContent: "center",
     },
     agendaPlant: { fontWeight: "700", fontSize: 13.5, color: t2.colors.ink },
     agendaType: { fontSize: 12, color: t2.colors.inkSoft },
