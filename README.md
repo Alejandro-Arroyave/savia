@@ -24,8 +24,10 @@ que avisan **el día antes** y **el mismo día** de cada tarea.
 | Código / scaffolding | ✅ **Monorepo scaffolded** (pnpm workspaces: `apps/mobile`, `apps/api` + worker, `packages/shared`). |
 | Frontend (pantallas) | ✅ **7 pantallas implementadas** en Expo (Login, Registro, Mis plantas, Calendario, Detalle, Registrar planta, Ajustes) con navegación, tema claro/oscuro, i18n y Apollo. |
 
-**No se ha escrito código de aplicación todavía.** La decisión explícita del usuario fue
-quedarnos en modelo/diseño antes de construir.
+**El scaffolding de la aplicación ya está implementado:** monorepo con API GraphQL + worker y
+las 7 pantallas de la app Expo conectadas a la API (ver detalle en
+[`docs/07-dev-setup.md`](docs/07-dev-setup.md)). Lo pendiente es la siguiente iteración (Auth0
+real, GraphQL Codegen, primera migración de Prisma contra BD real).
 
 ## Índice de documentos
 
